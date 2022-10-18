@@ -9,25 +9,45 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+- stage: FirstsStage
+  displayName: FirstsStage
+  jobs:
+  - job: FirstJob
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - script: echo Hello, world!
+      displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+        displayName: 'Run a multi-line script'
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Free Trial (fde3182a-e7a8-4643-bd4e-6d0aebf183d0)'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az group create -l westus -n MyTestResourceGroup'
+- stage: SecondStage
+  displayName: AZURECLITASK
+  jobs:
+  - job: AZURECLITASK
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Free Trial (fde3182a-e7a8-4643-bd4e-6d0aebf183d0)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az group create -l westus -n MyTestResourceGroup'
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Free Trial (fde3182a-e7a8-4643-bd4e-6d0aebf183d0)'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az group exists -n MyTestResourceGroup'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Free Trial (fde3182a-e7a8-4643-bd4e-6d0aebf183d0)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az group exists -n MyTestResourceGroup'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Free Trial (fde3182a-e7a8-4643-bd4e-6d0aebf183d0)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az group list'
